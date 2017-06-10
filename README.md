@@ -5,8 +5,8 @@ This repo contains some custom made tools that are used to administrate hosting 
 
 ## Contributors
 
-Founded by (@Mohannad Otaibi)[http://www.twitter.com/BuFai7an]
-And was maintained by (@Ghazzi Otaibi)[https://twitter.com/GhazziOtaibi]
+Founded by [@Mohannad Otaibi](http://www.twitter.com/BuFai7an)  
+And was maintained by [@Ghazzi Otaibi](https://twitter.com/GhazziOtaibi)
 
 ## License
 
