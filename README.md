@@ -1,12 +1,13 @@
 # System Administration Tools
+
 > private scripts collection
 
 This repo contains some custom made tools that are used to administrate hosting systems. Mainly for the time being, they are focused towards files and database backups.
 
 ## Contributors
 
-Founded by [@Mohannad Otaibi](http://www.twitter.com/BuFai7an)  
-And was maintained by [@Ghazzi Otaibi](https://twitter.com/GhazziOtaibi)
+- [@Mohannad Otaibi](http://www.twitter.com/BuFai7an) - initial code, maintainer
+- [@Ghazzi Otaibi](https://twitter.com/GhazziOtaibi) - initial code, maintainer
 
 ## License
 

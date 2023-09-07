@@ -12,22 +12,44 @@
 # 15 2 * * Sat /root/mo9a7i/scripts/backup_dbs.sh daily 1
 #
 
-
-function get_load_average() {
-        return $(echo "$(uptime|awk -F':' '{print $NF}'|awk -F',' '{print $1}')/1"|bc)
+# Function to get load average
+get_load_average() {
+  local load_avg=$(uptime | awk -F':' '{print $NF}' | awk -F',' '{print $1}')
+  echo $((load_avg / 1))
 }
 
-mysql -u root -e "show databases"|grep -v 'Database\|information_schema'|awk -F'|' '{print $1}'| \
-while read db;
-do
-        get_load_average;
-        if [ "${?}" -gt "3" ];
-        then
-                sleep 30;
-        fi
-        mysqldump -u root ${db} > /backup/mysql/${1}/${db}.${2}.sql;
-        bzip2 -f -5 /backup/mysql/${1}/${db}.${2}.sql;
-done;
+# Function to check disk space
+check_disk_space() {
+  local available_space=$(df -k /backup | tail -1 | awk '{print $4}')
+  if [ "$available_space" -lt "1000000" ]; then
+    echo "Not enough disk space. Exiting."
+    exit 1
+  fi
+}
 
-exit 0;
+# Logging
+log_file="/var/log/backup_dbs.log"
+echo "Backup started at $(date)" >> $log_file
 
+# Main loop to read databases and backup
+mysql -u root -e "show databases" | grep -v 'Database\|information_schema' | \
+while read -r db; do
+  load_avg=$(get_load_average)
+  
+  if [ "$load_avg" -gt "3" ]; then
+    sleep 30
+  fi
+  
+  # Check disk space before backup
+  check_disk_space
+  
+  # Backup and compress
+  timestamp=$(date +%Y%m%d%H%M%S)
+  mysqldump -u root $db > /backup/mysql/$1/$db.$2.$timestamp.sql
+  gzip -f /backup/mysql/$1/$db.$2.$timestamp.sql
+  
+  echo "Backed up $db at $(date)" >> $log_file
+done
+
+echo "Backup completed at $(date)" >> $log_file
+exit 0
